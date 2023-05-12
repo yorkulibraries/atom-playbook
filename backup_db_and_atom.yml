@@ -1,0 +1,33 @@
+---
+
+- hosts: all
+  become: yes
+  vars:
+    playtime: "{{ ansible_date_time.iso8601_basic_short }}"
+    db_dump_file: "/tmp/{{ atom_db }}-{{ playtime }}.sql"
+    atom_backup_dir: "/usr/share/nginx/atom-{{ playtime }}"
+
+  tasks:
+    - name: install python3-mysqldb
+      apt:
+        pkg:
+        - python3-mysqldb
+
+    - name: stop atom-worker
+      systemd:
+        state: stopped
+        name: atom-worker
+
+    - name: "Dumping {{ atom_db }} database from localhost"
+      community.mysql.mysql_db:
+        state: dump
+        name: "{{ atom_db }}"
+        target: "{{ db_dump_file }}"
+      when: not skip_backup
+
+    - name: "mv /usr/share/nginx/atom {{ atom_backup_dir }}"
+      command: "mv /usr/share/nginx/atom {{ atom_backup_dir }}"
+      args:
+        removes: /usr/share/nginx/atom
+        creates: "{{ atom_backup_dir }}"
+      when: not skip_backup

@@ -1,0 +1,34 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: make backup /usr/share/nginx/atom/lib/model/om/BaseDigitalObject.php
+      copy:
+        src: /usr/share/nginx/atom/lib/model/om/BaseDigitalObject.php
+        dest: /usr/share/nginx/atom/lib/model/om/BaseDigitalObject.php.bck
+        remote_src: true
+        force: false
+
+    - name: patch /usr/share/nginx/atom/lib/model/om/BaseDigitalObject.php
+      copy:
+        src: patches/BaseDigitalObject.php
+        dest: /usr/share/nginx/atom/lib/model/om/BaseDigitalObject.php
+
+    - name: run tools:upgrade-sql
+      command: "/usr/bin/php{{ php_version }} -d memory_limit=-1 symfony tools:upgrade-sql --no-confirmation" 
+      args:
+        chdir: "/usr/share/nginx/atom"
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: restore original /usr/share/nginx/atom/lib/model/om/BaseDigitalObject.php
+      copy:
+        src: /usr/share/nginx/atom/lib/model/om/BaseDigitalObject.php.bck
+        dest: /usr/share/nginx/atom/lib/model/om/BaseDigitalObject.php
+        remote_src: true
+        force: true
+

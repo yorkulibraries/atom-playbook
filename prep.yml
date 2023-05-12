@@ -1,0 +1,15 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: stop atom-worker
+      systemd:
+        state: stopped
+        name: atom-worker
+
+    - name: stop "php{{ php_version }}-fpm"
+      systemd:
+        state: stopped
+        name: "php{{ php_version }}-fpm"

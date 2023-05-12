@@ -1,0 +1,20 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: "run digitalobject:regen-derivatives"
+      expect:
+        command: "/usr/bin/php{{ php_version }} -d memory_limit=-1 symfony digitalobject:regen-derivatives "
+        echo: true
+        timeout: null
+        chdir: "/usr/share/nginx/atom"
+        responses:
+          (?i).*\(y\/N\): y
+      register: output
+      failed_when: '"Done!" not in output.stdout'
+
+    - debug: var=output.stdout_lines
+

@@ -1,0 +1,34 @@
+---
+
+- hosts: all
+  become: yes
+
+  roles:
+    - geerlingguy.php-mysql
+    - geerlingguy.php-versions
+    - geerlingguy.php
+    - geerlingguy.mysql
+    - geerlingguy.java
+    - geerlingguy.elasticsearch
+    - geerlingguy.composer
+    - geerlingguy.certbot
+
+  tasks:
+    - name: install packages
+      apt:
+        pkg:
+          - nginx
+          - gearman-job-server
+          - fop
+          - libsaxon-java
+          - imagemagick
+          - ghostscript
+          - poppler-utils
+          - ffmpeg
+
+  handlers:
+    - name: restart webserver
+      systemd:
+        state: restarted
+        name: nginx
+

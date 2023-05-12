@@ -1,0 +1,47 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: stop atom-worker
+      systemd:
+        state: stopped
+        name: atom-worker
+
+    - name: "DROP database {{ atom_db }}"
+      community.mysql.mysql_db:
+        name: "{{ atom_db }}"
+        state: absent
+
+    - name: "CREATE database {{ atom_db }}"
+      community.mysql.mysql_db:
+        name: "{{ atom_db }}"
+        encoding: "utf8mb4"
+        collation: "utf8mb4_0900_ai_ci"
+        state: present
+
+    - name: rm /usr/share/nginx/atom
+      file:
+        path: /usr/share/nginx/atom
+        state: absent 
+
+    - name: mkdir /usr/share/nginx/atom
+      file:
+        path: /usr/share/nginx/atom
+        state: directory
+
+    - name: download "atom-{{ atom_version }}.tar.gz"
+      ansible.builtin.unarchive:
+        src: "https://storage.accesstomemory.org/releases/atom-{{ atom_version }}.tar.gz"
+        dest: /usr/share/nginx/atom
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+      
+    - name: set ownership /usr/share/nginx/atom
+      file:
+        path: /usr/share/nginx/atom
+        owner: www-data
+        group: www-data
+        recurse: yes
+

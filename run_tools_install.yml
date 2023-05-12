@@ -1,0 +1,20 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: run tools:install
+      command: "/usr/bin/php{{ php_version }} -d memory_limit=-1 symfony tools:install --database-host=localhost --database-port=3306 --database-name={{ atom_db }} --database-user={{ atom_db }} --database-password={{ atom_db_pass }} --search-host=localhost --search-port=9200 --search-index=atom --site-title='{{ site_title }}' --site-description='{{ site_description }}' --site-base-url=https://{{ server_name }} --admin-email={{ admin_email }} --admin-username={{ admin_username }} --admin-password={{ admin_password }} --no-confirmation" 
+      args:
+        chdir: "/usr/share/nginx/atom"
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: set ownership /usr/share/nginx/atom
+      file:
+        path: /usr/share/nginx/atom
+        owner: www-data
+        group: www-data
+        recurse: yes

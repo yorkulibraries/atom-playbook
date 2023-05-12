@@ -1,0 +1,29 @@
+---
+- import_playbook: prep.yml
+- import_playbook: clean254_db_dump.yml 
+  vars:
+    table_defs_file: /mnt/rear/backup/theta-mysql/atom254-defs.sql 
+    table_data_file: /mnt/rear/backup/theta-mysql/atom-data-only.sql
+
+- import_playbook: dump_db.yml
+  vars:
+    db_dump_file: /tmp/atom254-cleaned.sql
+
+- import_playbook: drop_db_and_install_blank_atom.yml
+- import_playbook: run_tools_install.yml
+
+- import_playbook: drop_db_and_import_from_dump_file.yml
+  vars:
+    db_import_file: /tmp/atom254-cleaned.sql
+    import_data_only: false
+
+- import_playbook: run_tools_upgrade.yml 
+- import_playbook: run_build-nested-set.yml 
+
+- import_playbook: restore_uploads_downloads.yml
+  vars:
+    atom_backup_dir: "/mnt/rear/backup/atom.library.yorku.ca/atom"
+
+- import_playbook: run_regen-derivatives.yml
+- import_playbook: finish.yml
+

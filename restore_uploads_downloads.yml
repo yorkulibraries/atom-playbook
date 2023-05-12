@@ -1,0 +1,25 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: copy uploads from backup dir
+      synchronize:
+        src: "{{ atom_backup_dir }}/uploads/"
+        dest: /usr/share/nginx/atom/uploads/
+        archive: true
+      delegate_to: "{{ inventory_hostname }}"
+      register: output
+    - debug: var=output.stdout_lines
+
+    - name: copy downloads from backup dir
+      synchronize:
+        src: "{{ atom_backup_dir }}/downloads/"
+        dest: /usr/share/nginx/atom/downloads/
+        archive: true
+      delegate_to: "{{ inventory_hostname }}"
+      register: output
+    - debug: var=output.stdout_lines
+

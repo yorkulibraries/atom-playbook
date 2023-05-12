@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: "ALTER TABLE `rights` DROP `restriction`"
+      community.mysql.mysql_query:
+        login_db: "{{ atom_db }}"
+        query: "ALTER TABLE `rights` DROP `restriction`"

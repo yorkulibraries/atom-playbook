@@ -1,0 +1,10 @@
+---
+- import_playbook: backup_db_and_atom.yml
+- import_playbook: drop_db_and_install_blank_atom.yml
+- import_playbook: run_tools_install.yml
+- import_playbook: drop_db_and_import_from_dump_file.yml
+- import_playbook: run_tools_upgrade.yml
+- import_playbook: run_build-nested-set.yml 
+- import_playbook: restore_uploads_downloads.yml
+- import_playbook: run_regen-derivatives.yml
+- import_playbook: finish.yml

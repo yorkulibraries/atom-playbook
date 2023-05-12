@@ -1,0 +1,26 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: "DROP database {{ atom_db }}"
+      community.mysql.mysql_db:
+        name: "{{ atom_db }}"
+        state: absent
+      when: not import_data_only
+
+    - name: "CREATE database {{ atom_db }}"
+      community.mysql.mysql_db:
+        name: "{{ atom_db }}"
+        encoding: "utf8mb4"
+        collation: "utf8mb4_0900_ai_ci"
+        state: present
+      when: not import_data_only
+
+    - name: "Import {{ db_import_file | default(db_dump_file) }} to {{ atom_db }} database"
+      community.mysql.mysql_db:
+        state: import
+        name: "{{ atom_db }}"
+        target: "{{ db_import_file | default(db_dump_file) }}"

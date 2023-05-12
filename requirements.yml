@@ -1,0 +1,14 @@
+collections:
+  - community.general
+  - community.mysql
+  - ansible.posix
+
+roles:
+  - name: geerlingguy.php-mysql
+  - name: geerlingguy.php-versions
+  - name: geerlingguy.php
+  - name: geerlingguy.mysql
+  - name: geerlingguy.java
+  - name: geerlingguy.elasticsearch
+  - name: geerlingguy.composer
+  - name: geerlingguy.certbot

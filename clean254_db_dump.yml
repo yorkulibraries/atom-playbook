@@ -1,0 +1,15 @@
+---
+- import_playbook: drop_db_and_import_from_dump_file.yml
+  vars:
+    db_import_file: "{{ table_defs_file }}" 
+    import_data_only: false
+
+- import_playbook: add_columns.yml
+
+- import_playbook: drop_db_and_import_from_dump_file.yml
+  vars:
+    db_import_file: "{{ table_data_file }}"
+    import_data_only: true
+
+- import_playbook: remove_columns.yml
+
