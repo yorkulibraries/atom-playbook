@@ -13,11 +13,6 @@
         pkg:
         - python3-mysqldb
 
-    - name: stop atom-worker
-      systemd:
-        state: stopped
-        name: atom-worker
-
     - name: "Dumping {{ atom_db }} database from localhost"
       community.mysql.mysql_db:
         state: dump

@@ -23,6 +23,35 @@
         group: www-data
         recurse: yes
 
+    - name: install atom php-fpm pool
+      template:
+        src: templates/fpm-atom.conf
+        dest: "/etc/php/{{ php_version }}/fpm/pool.d/atom.conf"
+        force: true
+
+    - name: install nginx site {{ server_name }}
+      template:
+        src: templates/nginx-atom.j2
+        dest: "/etc/nginx/sites-available/{{ server_name }}"
+
+    - name: enable nginx site {{ server_name }}
+      file:
+        src: "/etc/nginx/sites-available/{{ server_name }}"
+        dest: "/etc/nginx/sites-enabled/{{ server_name }}"
+        state: link
+      notify: restart webserver
+
+    - name: disable nginx default site
+      file:
+        path: "/etc/nginx/sites-enabled/default"
+        state: absent
+      notify: restart webserver
+
+    - name: install atom-worker service
+      template:
+        src: templates/atom-worker.service
+        dest: /etc/systemd/system/atom-worker.service
+
     - name: restart fpm
       systemd:
         state: restarted
@@ -34,4 +63,10 @@
         name: atom-worker
         daemon_reload: true
         enabled: true
+
+  handlers:
+    - name: restart webserver
+      systemd:
+        state: restarted
+        name: nginx
 

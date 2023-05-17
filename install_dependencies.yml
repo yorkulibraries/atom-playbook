@@ -13,7 +13,13 @@
     - geerlingguy.composer
     - geerlingguy.certbot
 
-  tasks:
+  pre_tasks:
+    - name: add ES_JAVA_OPTS to /etc/default/elasticsearch
+      lineinfile: 
+        line: "ES_JAVA_OPTS=-Djava.io.tmpdir=/var/lib/elasticsearch/tmp"
+        path: /etc/default/elasticsearch
+        create: true
+
     - name: install packages
       apt:
         pkg:

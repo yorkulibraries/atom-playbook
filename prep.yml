@@ -4,12 +4,17 @@
   become: yes
 
   tasks:
+    - name: Populate service facts
+      service_facts:
+
     - name: stop atom-worker
       systemd:
         state: stopped
         name: atom-worker
+      when: "'atom-worker' in ansible_facts.services"
 
     - name: stop "php{{ php_version }}-fpm"
       systemd:
         state: stopped
         name: "php{{ php_version }}-fpm"
+

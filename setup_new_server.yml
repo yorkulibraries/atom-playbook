@@ -1,0 +1,4 @@
+---
+- import_playbook: open_http_ports.yml
+- import_playbook: install_dependencies.yml
+- import_playbook: migrate_and_upgrade.yml

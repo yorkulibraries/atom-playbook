@@ -4,10 +4,6 @@
   become: yes
 
   tasks:
-    - name: stop atom-worker
-      systemd:
-        state: stopped
-        name: atom-worker
 
     - name: "DROP database {{ atom_db }}"
       community.mysql.mysql_db:
