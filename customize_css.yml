@@ -1,0 +1,20 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: copy customized variables.less to plugins/arDominionPlugin/css/less/variables.less
+      copy:
+        src: templates/variables.less
+        dest: /usr/share/nginx/atom/plugins/arDominionPlugin/css/less/variables.less
+
+
+    - name: recompile stylesheets
+      command: "make -C plugins/arDominionPlugin" 
+      args:
+        chdir: "/usr/share/nginx/atom"
+      register: output
+
+    - debug: var=output.stdout_lines

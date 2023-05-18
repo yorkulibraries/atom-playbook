@@ -5,6 +5,12 @@
 
   tasks:
 
+    - name: set default php command to the specified version
+      command: "update-alternatives --set php /usr/bin/php{{ php_version }}" 
+      register: output
+
+    - debug: var=output.stdout_lines
+
     - name: "/usr/bin/php{{ php_version }} -d memory_limit=-1 symfony cc"
       expect:
         chdir: "/usr/share/nginx/atom"

@@ -25,5 +25,6 @@
     atom_backup_dir: "/mnt/rear/backup/atom.library.yorku.ca/atom"
 
 - import_playbook: run_regen-derivatives.yml
+- import_playbook: customize_css.yml
 - import_playbook: finish.yml
 
