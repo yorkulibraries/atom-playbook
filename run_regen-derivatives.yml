@@ -5,6 +5,13 @@
 
   tasks:
 
+    - name: remove PDF line in /etc/ImageMagick-6/policy.xml 
+      lineinfile:
+        line: '  <policy domain="coder" rights="none" pattern="PDF" />'
+        path: /etc/ImageMagick-6/policy.xml 
+        state: absent
+
+
     - name: "run digitalobject:regen-derivatives"
       expect:
         command: "/usr/bin/php{{ php_version }} -d memory_limit=-1 symfony digitalobject:regen-derivatives "
